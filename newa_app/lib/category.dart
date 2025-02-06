@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:newa_app/model.dart';
+import 'package:newa_app/news_view.dart';
 
 class Category extends StatefulWidget {
   String Query;
@@ -79,62 +80,85 @@ class _CategoryState extends State<Category> {
                       return Container(
                           margin:
                               EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            elevation: 1.0,
-                            child: Stack(
-                              children: [
-                                ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: Image.network(
-                                        newsModelList[index].newsImg,
-                                        fit: BoxFit.fitHeight,
-                                        height: 300,
-                                        width: double.infinity)),
-                                Positioned(
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          gradient: LinearGradient(
-                                              colors: [
-                                                Colors.black12.withOpacity(0),
-                                                Colors.black
-                                              ],
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter)),
-                                      padding:
-                                          EdgeInsets.fromLTRB(15, 15, 10, 8),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            newsModelList[index].newsHead,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            newsModelList[index]
-                                                        .newsDes
-                                                        .length >
-                                                    50
-                                                ? "${newsModelList[index].newsDes.substring(0, 55)}...."
-                                                : newsModelList[index].newsDes,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12),
-                                          )
-                                        ],
-                                      ),
-                                    ))
-                              ],
+                          child: InkWell(
+                            onTap: () {
+                              if (newsModelList[index].newsUrl.isNotEmpty) {
+                                // Navigate to the NewsView screen if the URL is not empty
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NewsView(
+                                            url: newsModelList[index].newsUrl,
+                                          )),
+                                );
+                              } else {
+                                // Show a SnackBar if there's no URL available
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content:
+                                        Text("No URL available for this news"),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              elevation: 1.0,
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Image.network(
+                                          newsModelList[index].newsImg,
+                                          fit: BoxFit.fitHeight,
+                                          height: 300,
+                                          width: double.infinity)),
+                                  Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            gradient: LinearGradient(
+                                                colors: [
+                                                  Colors.black12.withOpacity(0),
+                                                  Colors.black
+                                                ],
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter)),
+                                        padding:
+                                            EdgeInsets.fromLTRB(15, 15, 10, 8),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              newsModelList[index].newsHead,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              newsModelList[index]
+                                                          .newsDes
+                                                          .length >
+                                                      50
+                                                  ? "${newsModelList[index].newsDes.substring(0, 55)}...."
+                                                  : newsModelList[index]
+                                                      .newsDes,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12),
+                                            )
+                                          ],
+                                        ),
+                                      ))
+                                ],
+                              ),
                             ),
                           ));
                     }),
